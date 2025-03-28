@@ -4,7 +4,7 @@ GTaskMg is a extension for Goroutine and Channel Management. We extend the Gorou
 
 GManager is used to manage GTasks and GQueues.
 
-GManager manage GTasks and GQueues by name. So users can send message to any GTasks from anywhere by name. Users can broadcast messages to all GTasks(with or without sender). If we want to stop all the GTasks but must wait for them to finish the job, we can broadcast a gtask.GMSG_EXIT message then use GManager.Join() to wait.
+GManager manage GTasks and GQueues by name. So users can send message to any GTasks from anywhere by name. Users can broadcast messages to all GTasks(with or without sender). If we want to stop all the GTasks but must wait for them to finish the job, we can broadcast a gtask.GMSG_EXIT message(GManager.ReqExit() or GManager.ReqExitWithout(string)) then use GManager.Join() to wait.
 
 GManager provides a default Goroutine to prevent deadlock. Users can start it if necessary or not.
 

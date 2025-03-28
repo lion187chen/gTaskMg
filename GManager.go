@@ -139,6 +139,10 @@ func (obj *GManager) ReqExit() {
 	obj.Broadcast(GMSG_EXIT)
 }
 
+func (obj *GManager) ReqExitWithout(without string) {
+	obj.BroadcastWithout(GMSG_EXIT, without)
+}
+
 func (obj *GManager) ReqTaskExit(name string) {
 	t, f := obj.tasks[name]
 	if f {
