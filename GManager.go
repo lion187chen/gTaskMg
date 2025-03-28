@@ -146,7 +146,7 @@ func (obj *GManager) ReqTaskExit(name string) {
 	}
 }
 
-// 由于 Golang 的携程死锁检测，当所有任务都处于阻塞状态时，会导致死锁，进而程序崩溃，有必要提供一个可选的默认协程，以防止死锁 panic。
+// 由于 Golang 的协程死锁检测，当所有任务都处于阻塞状态时，会导致死锁，进而程序崩溃，有必要提供一个可选的默认协程，以防止死锁 panic。
 // 允许使用 GTSK_DEFAULT 替换默认的 Default Task，替换默认协程必须发生在默认协程运行之前。
 // 使用 go GetDefaultTsk().Run().(func())() 手动启动默认协程，如果能够保证系统中的协程不存在死锁情况，可不启动默认协程。
 // 向默认协程发送 GMSG_EXIT 消息可使其退出。
