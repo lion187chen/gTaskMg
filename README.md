@@ -10,6 +10,14 @@ GManager provides a default Goroutine to prevent deadlock. Users can start it if
 
 Enjoy it!
 
+## Install
+
+```bash
+go get github.com/lion187chen/gTaskMg
+```
+
+## Example
+
 ```go
 package main
 
