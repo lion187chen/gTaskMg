@@ -9,22 +9,26 @@ import (
 
 type MGCore struct {
 	*gtask.GManager
+}
+
+type MTask struct {
 	*gtask.GTask
 }
 
 var Core MGCore
+var ATask MTask
 
 func main() {
 	Core.GManager = new(gtask.GManager).Init()
 	go Core.GManager.GetDefaultTsk().Run().(func())()
 
-	Core.GTask = Core.CreateTask(Core.demoTask, "Demo.Task", 16)
+	ATask.GTask = Core.CreateTask(ATask.demoTask, "Demo.Task", 16)
 
-	Core.GManager.EnQueueSync("Demo.Task", "Message 0")          // Send message to a named queue
-	Core.GTask.GQueue.EnQueue("Message 1", 100*time.Millisecond) // OR use my.GQueue
+	Core.GManager.EnQueueSync("Demo.Task", "Message 0")           // Send message to a named queue
+	ATask.GTask.GQueue.EnQueue("Message 1", 100*time.Millisecond) // OR use my.GQueue
 	Core.GManager.BroadcastWithout("Message 2", "Demo.Task")
 
-	go Core.Run().(func(string))("A Demo Task")
+	go ATask.Run().(func(string))("A Demo Task")
 
 	time.Sleep(10 * time.Second)
 	Core.GManager.Broadcast(gtask.GMSG_EXIT)
@@ -34,7 +38,9 @@ func main() {
 	fmt.Println("All task done!")
 }
 
-func (my *MGCore) demoTask(name string) {
+func (my *MTask) demoTask(name string) {
+	defer ATask.GTask.Exit()
+
 	fmt.Println(name)
 	for {
 		msg := <-my.GQueue // OR use my.DeQueue()/my.DeQueueSync()
@@ -42,7 +48,6 @@ func (my *MGCore) demoTask(name string) {
 		case string:
 			switch tmsg {
 			case gtask.GMSG_EXIT:
-				Core.GTask.Exit()
 				return
 			default:
 				fmt.Println(tmsg)

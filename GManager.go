@@ -61,8 +61,8 @@ func (obj *GManager) RegistTask(task *GTask, name string) {
 }
 
 func (obj *GManager) DeleteTask(name string) {
-	obj.tlock.RLock()
-	defer obj.tlock.RUnlock()
+	obj.tlock.Lock()
+	defer obj.tlock.Unlock()
 
 	_, f := obj.tasks[name]
 	if f {
@@ -71,25 +71,45 @@ func (obj *GManager) DeleteTask(name string) {
 	}
 }
 
+func (obj *GManager) DeleteAllTask() {
+	obj.tlock.Lock()
+	defer obj.tlock.Unlock()
+
+	for n := range obj.tasks {
+		delete(obj.tasks, n)
+	}
+	obj.DeleteAllQueue()
+}
+
 func (obj *GManager) CreateTask(runner any, name string, qsize int) *GTask {
 	t := new(GTask).Init(runner, name, obj, qsize)
 	return t
 }
 
 func (obj *GManager) RegistQueue(queue GQueue, name string) {
-	obj.qlock.RLock()
-	defer obj.qlock.RUnlock()
+	obj.qlock.Lock()
+	defer obj.qlock.Unlock()
 	obj.queues[name] = queue
 }
 
 func (obj *GManager) DeleteQueue(name string) {
-	obj.qlock.RLock()
-	defer obj.qlock.RUnlock()
+	obj.qlock.Lock()
+	defer obj.qlock.Unlock()
 
 	q, f := obj.queues[name]
 	if f {
 		q.Close()
 		delete(obj.queues, name)
+	}
+}
+
+func (obj *GManager) DeleteAllQueue() {
+	obj.qlock.Lock()
+	defer obj.qlock.Unlock()
+
+	for n, q := range obj.queues {
+		q.Close()
+		delete(obj.queues, n)
 	}
 }
 
