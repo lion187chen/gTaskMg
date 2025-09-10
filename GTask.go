@@ -7,12 +7,12 @@ import (
 type GTask struct {
 	GQueue
 	sync.WaitGroup
-	runner  interface{}
+	runner  any
 	name    string
 	manager *GManager
 }
 
-func (obj *GTask) Init(runner interface{}, name string, manager *GManager, qsize int) *GTask {
+func (obj *GTask) Init(runner any, name string, manager *GManager, qsize int) *GTask {
 	obj.runner = runner
 	obj.name = name
 	obj.manager = manager
@@ -27,12 +27,12 @@ func (obj *GTask) Init(runner interface{}, name string, manager *GManager, qsize
 	return nil
 }
 
-func (obj *GTask) Run() interface{} {
+func (obj *GTask) Run() any {
 	obj.Enter()
 	return obj.runner
 }
 
-func (obj *GTask) Runner() interface{} {
+func (obj *GTask) Runner() any {
 	return obj.runner
 }
 

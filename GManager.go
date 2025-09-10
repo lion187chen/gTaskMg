@@ -71,7 +71,7 @@ func (obj *GManager) DeleteTask(name string) {
 	}
 }
 
-func (obj *GManager) CreateTask(runner interface{}, name string, qsize int) *GTask {
+func (obj *GManager) CreateTask(runner any, name string, qsize int) *GTask {
 	t := new(GTask).Init(runner, name, obj, qsize)
 	return t
 }
@@ -112,7 +112,7 @@ func (obj *GManager) Join() {
 	obj.WaitGroup.Wait()
 }
 
-func (obj *GManager) Broadcast(event interface{}) {
+func (obj *GManager) Broadcast(event any) {
 	obj.tlock.RLock()
 	defer obj.tlock.RUnlock()
 	// Last to first.
@@ -122,7 +122,7 @@ func (obj *GManager) Broadcast(event interface{}) {
 	}
 }
 
-func (obj *GManager) BroadcastWithout(event interface{}, without string) {
+func (obj *GManager) BroadcastWithout(event any, without string) {
 	obj.tlock.RLock()
 	defer obj.tlock.RUnlock()
 	// Last to first.
@@ -182,7 +182,7 @@ func (obj *GManager) GetQueue(name string) (GQueue, bool) {
 	return q, e
 }
 
-func (obj *GManager) EnQueueSync(name string, itm interface{}) error {
+func (obj *GManager) EnQueueSync(name string, itm any) error {
 	obj.qlock.RLock()
 	defer obj.qlock.RUnlock()
 
@@ -194,7 +194,7 @@ func (obj *GManager) EnQueueSync(name string, itm interface{}) error {
 	return nil
 }
 
-func (obj *GManager) EnQueue(name string, itm interface{}, timeout time.Duration) error {
+func (obj *GManager) EnQueue(name string, itm any, timeout time.Duration) error {
 	obj.qlock.RLock()
 	defer obj.qlock.RUnlock()
 
